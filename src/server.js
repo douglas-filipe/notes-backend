@@ -14,7 +14,7 @@ server.use(cors())
 server.use(express.json())
 
 server.use("/user", User)
-server.use("/note", Note)
+server.use("/notes", Note)
 
 
 server.listen('4000', ()=>{
