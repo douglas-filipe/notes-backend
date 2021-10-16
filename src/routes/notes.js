@@ -6,7 +6,7 @@ const router = require("express").Router();
 
 router.get("/", verifyToken, async (req, res) => {
   try {
-    const notes = await Notes.find({ author: req.body.author });
+    const notes = await Notes.find({author: req.user._id }).sort({createdAt: -1});
     res.status(200).json(notes);
   } catch (e) {
     res.status(500).json(e);

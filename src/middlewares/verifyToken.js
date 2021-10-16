@@ -1,15 +1,24 @@
 const jwt = require('jsonwebtoken')
 
+const secret = process.env.JWT_SEC
+
+const User = require("../models/User")
+
 const verifyToken = (req, res, next) => {
-    const authHeader = req.headers.token
-    const token = authHeader.split(" ")[1]
-    if(authHeader){
-        jwt.verify(token, process.env.JWT_SEC, (err, user)=>{
+    const token = req.headers['token']
+    if(token){
+        jwt.verify(token, secret, (err, decoded)=>{
             if(err){
-                res.status(403).json("Token is not valid!")
+                res.status(401).json("Token is not valid!")
             }
-            req.user = user
-            next()
+            req.email = decoded.email
+            User.findOne({email: decoded.email})
+            .then(user => {
+                req.user = user
+                next()
+            }).catch(err=>{
+                res.status(401).json({error: err})
+            })
         })
     }else{
         return res.status(400).json("You are not authenticated!")
