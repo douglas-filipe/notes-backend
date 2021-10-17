@@ -1,8 +1,8 @@
+const router = require("express").Router();
 const Notes = require("../models/Notes");
 
 const verifyToken = require("../middlewares/verifyToken");
 
-const router = require("express").Router();
 
 router.get("/", verifyToken, async (req, res) => {
   try {
@@ -55,5 +55,18 @@ router.get("/:id", verifyToken, async (req, res) => {
     res.status(500).json(e);
   }
 });
+
+router.get("/search", verifyToken, async (req, res) => {
+  const { query } = req.query;
+  try {
+    const notes = await Notes.find({ author: req.user._id }).find({
+      $text: { $search: query },
+    });
+    res.json(notes);
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+});
+
 
 module.exports = router;
