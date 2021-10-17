@@ -18,6 +18,9 @@ mongoose.connect(process.env.MONGO)
 
 server.use(cors())
 server.use(express.json())
+server.get("/", (req, res) => {
+    res.send("Funcionou")
+})
 
 server.use("/user", User)
 server.use("/notes", Note)
