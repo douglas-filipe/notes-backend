@@ -26,6 +26,5 @@ server.use("/user", User)
 server.use("/notes", Note)
 
 
-server.listen('4000', ()=>{
-    console.log('App running')
-})
+server.listen(process.env.PORT || 3000)
+
